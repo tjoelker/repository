@@ -1,0 +1,19 @@
+set viminfo+=n~/.vim/viminfo
+
+set encoding=utf-8
+
+let &t_SI.="\e[6 q"
+let &t_EI.="\e[2 q"
+
+syntax enable
+colorscheme monokai
+set number relativenumber
+
+set laststatus=2
+
+set linebreak
+
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set autoindent
