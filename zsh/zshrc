@@ -56,6 +56,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+# php config
+export PATH="/usr/local/opt/php@7.4/bin:$PATH"
+export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
+export LDFLAGS="-L/usr/local/opt/php@7.4/lib"
+export CPPFLAGS="-I/usr/local/opt/php@7.4/include"
+
 # aliases
 alias sc="cmatrix -C white"
 alias dcrd="open -a discord"
