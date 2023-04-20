@@ -1,74 +1,92 @@
-# zsh config
-LINEBR=$'\n'
-PROMPT="${LINEBR}%B[%T] %F{214}%n %F{255}@ %F{214}%U%1~%u %F{255}$%f%b "
+# zshrc
+COLOR_0=238
+COLOR_1=242
+COLOR_2=248
+COLOR_3=99
+COLOR_4=111
+NEWLINE=$'\n'
 
-HISTFILE=~/.zsh/.zhistory
-HISTSIZE=10000
-SAVEHIST=10000
+setopt PROMPT_SUBST
+setopt globdots
 unsetopt beep
 
+# enable completion menu
 autoload -Uz compinit && compinit
-zstyle ':completion:*' menu select
 zmodload zsh/complist
-compinit
-_comp_options+=(globdots)
-
+zstyle ':completion:*' menu select
 bindkey -v
-export KEYTIMEOUT=1
 
+# change cursor shape based on vi mode
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey "^?" backward-delete-char
+bindkey '^?' backward-delete-char
 
-# change cursor shape depending on vi mode
+export KEYTIMEOUT=1
+
 function zle-keymap-select {
  if [[ ${KEYMAP} == vicmd ]] ||
     [[ $1 = 'block' ]]; then
   echo -ne '\e[2 q'
  elif [[ ${KEYMAP} == main ]] ||
-    [[ ${KEYMAP} == viins ]] ||
-    [[ ${KEYMAP} = '' ]] ||
-    [[ $1 = 'beam' ]]; then
+      [[ ${KEYMAP} == viins ]] ||
+      [[ ${KEYMAP} = '' ]] ||
+      [[ $1 = 'beam' ]]; then
   echo -ne '\e[6 q'
  fi
 }
 zle -N zle-keymap-select
 zle-line-init() {
  zle -K viins
- echo -ne "\e[6 q"
+ echo -ne '\e[6 q'
 }
 zle -N zle-line-init
 echo -ne '\e[6 q'
-preexec() { echo -ne '\e[6 q' ;}
+preexec() {
+ echo -ne '\e[6 q';
+}
 
-# git
+# git integration
+autoload -Uz add-zsh-hook
 autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-RPROMPT='%F{202}${vcs_info_msg_0_}%f'
-zstyle ':vcs_info:git:*' formats '%b'
 
-# docker
-fpath=(~/.zsh/completion $fpath)
+add-zsh-hook precmd vcs_info
 
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+zstyle ':vcs_info:git:*' formats '%F{cyan}%c%u(%32>…>%b%>>%)%f'
+zstyle ':vcs_info:git:*' actionformats '%F{cyan}%c%u(%32>…>%b%>>%)%f %F{yellow}! %a%f'
+zstyle ':vcs_info:git:*' stagedstr '%F{green}'
+zstyle ':vcs_info:git:*' unstagedstr '%F{red}'
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
 
-# php
-export PATH="/usr/local/opt/php@7.4/bin:$PATH"
-export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
-export LDFLAGS="-L/usr/local/opt/php@7.4/lib"
-export CPPFLAGS="-I/usr/local/opt/php@7.4/include"
++vi-git-untracked() {
+  if git --no-optional-locks status --porcelain 2> /dev/null | grep -q '^??'; then
+    hook_com[staged]+='%F{red}'
+  fi
+}
 
+# prompt configuration
+PROMPT='%F{ ${COLOR_0} }${(r:$COLUMNS::─:)}'
+PROMPT+='${NEWLINE}'
+PROMPT+='%F{ ${COLOR_1} }◼ '
+PROMPT+='%F{ ${COLOR_2} }%T '
+PROMPT+='%F{ ${COLOR_3} }%n%f @ '
+PROMPT+='%F{ ${COLOR_4} }%1~%f '
+PROMPT+='${vcs_info_msg_0_}'
+PROMPT+='${NEWLINE}'
+PROMPT+='%F{ ${COLOR_1} }└╴%f$ '
+
+HISTFILE=~/.zsh/.zhistory
+HISTSIZE=10000
+SAVEHIST=10000
+
+# miscellaneous
 # aliases
-alias sc="cmatrix -C white"
-alias dcrd="open -a discord"
-alias frfx="open -a firefox"
-alias chrm="open -a google\ chrome"
-alias sfri="open -a safari"
-alias sptf="open -a spotify";
+alias chrm='open -a google\ chrome'
+alias dcrd='open -a discord'
+alias frfx='open -a firefox'
+alias sfri='open -a safari'
+alias sptf='open -a spotify'
+alias finder='open -a finder'
+
