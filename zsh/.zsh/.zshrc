@@ -2,8 +2,8 @@
 COLOR_0=238
 COLOR_1=242
 COLOR_2=248
-COLOR_3=99
-COLOR_4=111
+COLOR_3=141
+COLOR_4=191
 NEWLINE=$'\n'
 
 setopt PROMPT_SUBST
@@ -69,7 +69,7 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
 # prompt configuration
 PROMPT='%F{ ${COLOR_0} }${(r:$COLUMNS::─:)}'
 PROMPT+='${NEWLINE}'
-PROMPT+='%F{ ${COLOR_1} }◼ '
+PROMPT+='%F{ ${COLOR_4} }* '
 PROMPT+='%F{ ${COLOR_2} }%T '
 PROMPT+='%F{ ${COLOR_3} }%n%f @ '
 PROMPT+='%F{ ${COLOR_4} }%1~%f '
@@ -89,4 +89,3 @@ alias frfx='open -a firefox'
 alias sfri='open -a safari'
 alias sptf='open -a spotify'
 alias finder='open -a finder'
-
