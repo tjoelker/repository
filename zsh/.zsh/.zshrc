@@ -14,12 +14,14 @@ autoload -Uz compinit && compinit
 compinit -D $ZDOTDIR/.zcompdump
 zmodload zsh/complist
 zstyle ':completion:*' menu select
+bindkey -v
 
 # change cursor shape based on vi mode
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
+bindkey '^?' backward-delete-char
 
 export KEYTIMEOUT=1
 
